@@ -370,7 +370,7 @@ void showGUI(){
         //normal
         // g_reload_shader ^= ImGui::Checkbox("2", &g_shadow_toggle); ImGui::SameLine();
         //g_task_chosen == 31 || g_task_chosen == 12 || g_task_chosen == 13 ? ImGui::Text("Enable Shadows") : ImGui::TextColored(ImVec4(0.2f, 0.2f, 0.2f, 0.5f), "Enable Shadows");
-        //neu
+        //funktioniert noch nicht ganz
         // use button 2 to toggle compositing in task 31
         g_reload_shader ^= ImGui::Checkbox("2", &g_shadow_toggle); ImGui::SameLine();
         if (g_task_chosen == g_task_chosen == 12 || g_task_chosen == 13) {
