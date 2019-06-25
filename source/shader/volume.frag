@@ -40,10 +40,14 @@ inside_volume_bounds(const in vec3 sampling_position)
 
 
 float
-get_sample_data(vec3 in_sampling_pos{
+get_sample_data(vec3 in_sampling_pos)
+{
     vec3 obj_to_tex = vec3(1.0) / max_bounds;
     return texture(volume_texture, in_sampling_pos * obj_to_tex).r;
+
 }
+
+//**********************neu**************************
 
 // Aufgabe 2.1
 // calculates the gradient at a given volume sampling position
@@ -78,7 +82,7 @@ calculate_light(vec3 sampling_pos) {
 
   return (light_ambient_color + lambertian * light_diffuse_color + specular * light_specular_color);
 }
-
+//****************************************************
 
 void main()
 {
@@ -129,8 +133,8 @@ void main()
 #if TASK == 11
     
     // average intensity projection
-    vec4 avg_color = vec4(0.0, 0.0, 0.0, 0.0); 
-    int counter = 0; 
+    vec4 avg_color = vec4(0.0, 0.0, 0.0, 0.0); //neu
+    int counter = 0; // neu
 
     // the traversal loop,
     // termination when the sampling position is outside volume boundarys
@@ -144,10 +148,10 @@ void main()
         //dst = vec4(sampling_pos, 1.0);
 
         // apply the transfer functions to retrieve color and opacity
-        vec4 color = texture(transfer_texture, vec2(s, s)); 
+        vec4 color = texture(transfer_texture, vec2(s, s)); // neu
 
         // avg calc
-        avg_color += color; 
+        avg_color += color; // neu
         
         // increment the ray sampling position
         sampling_pos  += ray_increment;
@@ -155,18 +159,18 @@ void main()
         // update the loop termination condition
         inside_volume  = inside_volume_bounds(sampling_pos);
 
-        counter++; 
+        counter++; // neu
     }
-    dst = avg_color / counter; 
+    dst = avg_color / counter; // neu
 
 #endif
     
 #if TASK == 12 || TASK == 13
 
-    vec3 prev_sampling_pos; 
-    bool  binary  = false; 
+    vec3 prev_sampling_pos; // neu
+    bool  binary  = false; // neu
     
-    // threshold for floating point operations 
+    // threshold for floating point operations // neu
     float epsilon = 0.0001; 
 
     // the traversal loop,
@@ -177,26 +181,26 @@ void main()
         // get sample
         float s = get_sample_data(sampling_pos);
 
-        // saves sampling pos for binary search
+        // saves sampling pos for binary search // neu
         prev_sampling_pos = sampling_pos; 
 
         // dummy code
         //dst = vec4(light_diffuse_color, 1.0);
 
-        if (TASK == 13) 
-          binary = true; 
+        if (TASK == 13) // neu
+          binary = true; // neu
 
         // first-hit isosurface
-        if (s > iso_value && !binary) { 
-          dst = texture(transfer_texture, vec2(s, s)); 
-          break; 
+        if (s > iso_value && !binary) { // neu
+          dst = texture(transfer_texture, vec2(s, s)); // neu
+          break; // neu
         }
 
         // increment the ray sampling position
         sampling_pos += ray_increment;
 
 #if TASK == 13 // Binary Search
-
+//***********************neu*****************************************************
         // gets next sample
         float next_sample = get_sample_data(sampling_pos); 
 
@@ -226,16 +230,16 @@ void main()
 
             ++iterations;
         }
+//*********************************************************************************
 
 
-
-#if ENABLE_LIGHTNING == 1 // Add Shading
+#if ENABLE_LIGHTNING == 1 // Add Shading // alles neu
         if(!in_shadow) { // neu
         dst = vec4(calculate_light(mid_pos), 1);
         }
 #endif
 
-#if ENABLE_SHADOWING == 1 // Add Shadows
+#if ENABLE_SHADOWING == 1 // Add Shadows // alles neu
         vec3 light_dir = normalize(light_position - mid_pos);
         vec3 shadow_step = light_dir * sampling_distance;
         float epsilon = 0.1;
@@ -272,7 +276,7 @@ void main()
     // termination when the sampling position is outside volume boundarys
     // another termination condition for early ray termination is added
 
-#if ENABLE_SHADOWING == 1 // Hack: button label changes when compositing is selected (Back-To-Front)
+#if ENABLE_SHADOWING == 1 // Hack: button label changes when compositing is selected (Back-To-Front) //neu
     while (inside_volume) {
       sampling_pos += ray_increment;
       // update the loop termination condition
@@ -289,7 +293,7 @@ float epsilon = 0.0001; // threshold for floating point operations
       float s = get_sample_data(sampling_pos);
       vec4 color = texture(transfer_texture, vec2(s, s));
 
-#if ENABLE_OPACITY_CORRECTION == 1 // Opacity Correction
+#if ENABLE_OPACITY_CORRECTION == 1 // Opacity Correction // neu gemacht
     color.a = 1 - pow((1 - color.a), 255 * sampling_distance / sampling_distance_ref);
 #endif
 
@@ -317,7 +321,7 @@ float epsilon = 0.0001; // threshold for floating point operations
           break;
       }
 
-      // increment the ray sampling position
+      // increment the ray sampling position // alt
       sampling_pos += ray_increment;
 
 #else // Back_to_Front compositing
